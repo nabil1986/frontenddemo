@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+/*import React from 'react';
 import './App.css';
+import DeviceList from './components/DeviceList';
+import DeviceForm from './components/DeviceForm';
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Gestion de Graissage des Appareils</h1>
+      <DeviceForm />
+      <DeviceList />
     </div>
   );
-}
+};
+
+export default App;*/
+
+// src/App.js
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import DeviceManagement from './DeviceManagement';
+import './App.css';
+
+const App = () => {
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/devices" element={<DeviceManagement />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
 
 export default App;
+
