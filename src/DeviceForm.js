@@ -6,7 +6,7 @@ const DeviceForm = ({ device, onSubmit }) => {
   const [greaseQuantity, setGreaseQuantity] = useState(device ? device.grease_quantity : '');
   const [greasePeriod, setGreasePeriod] = useState(device ? device.grease_period : '');
   const [observation, setObservation] = useState(device ? device.observation : '');
-  const [levelControl, setLevelControl] = useState(device ? (device.niveau === 1 ? 'oui' : 'non') : 'non'); // Ajustement ici
+  const [levelControl, setLevelControl] = useState(device ? (device.niveau === 1 ? 'oui' : 'non') : 'non');
 
   useEffect(() => {
     if (device) {
@@ -14,12 +14,13 @@ const DeviceForm = ({ device, onSubmit }) => {
       setGreaseQuantity(device.grease_quantity);
       setGreasePeriod(device.grease_period);
       setObservation(device.observation);
-      setLevelControl(device.niveau === 1 ? 'oui' : 'non'); // Ajustement ici
+      setLevelControl(device.niveau === 1 ? 'oui' : 'non');
     }
   }, [device]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
 
     const updatedDevice = {
       device_name: deviceName,
@@ -29,14 +30,24 @@ const DeviceForm = ({ device, onSubmit }) => {
       level_control: levelControl // Nouveau champ
     };
 
-    if (device) {
-      axios.put(`${process.env.REACT_APP_API_URL}/devices/${device.id}`, updatedDevice)
-        .then(onSubmit)
-        .catch(error => console.error('Error updating device: ', error));
-    } else {
-      axios.post(`${process.env.REACT_APP_API_URL}/devices`, updatedDevice)
-        .then(onSubmit)
-        .catch(error => console.error('Error adding device: ', error));
+    try {
+      if (device) {
+        const response = await axios.put(
+          `${process.env.REACT_APP_API_URL}/devices/${device.id}`,
+          updatedDevice,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        onSubmit();
+      } else {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/devices`,
+          updatedDevice,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        onSubmit();
+      }
+    } catch (error) {
+      console.error('Error submitting form: ', error);
     }
   };
 

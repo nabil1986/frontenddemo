@@ -1,40 +1,23 @@
-/*import React from 'react';
-import './App.css';
-import DeviceList from './components/DeviceList';
-import DeviceForm from './components/DeviceForm';
-
-const App = () => {
-  return (
-    <div className="App">
-      <h1>Gestion de Graissage des Appareils</h1>
-      <DeviceForm />
-      <DeviceList />
-    </div>
-  );
-};
-
-export default App;*/
-
-// src/App.js
-
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './Login';
 import Home from './Home';
-import DeviceManagement from './DeviceManagement';
-import './App.css';
+import DeviceForm from './DeviceForm';
+import DeviceList from './DeviceList';
 
 const App = () => {
+  const isAuthenticated = !!localStorage.getItem('token');
+
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/devices" element={<DeviceManagement />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/" />} />
+        <Route path="/devices" element={isAuthenticated ? <DeviceForm /> : <Navigate to="/" />} />
+        <Route path="/listdevices" element={isAuthenticated ? <DeviceList /> : <Navigate to="/" />} />
+      </Routes>
     </Router>
   );
 };
 
 export default App;
-
